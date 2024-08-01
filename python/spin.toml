@@ -1,0 +1,26 @@
+spin_manifest_version = 2
+
+[application]
+authors = ["Kate Goldenring <kate.goldenring@fermyon.com>"]
+description = "Py"
+name = "python"
+version = "0.1.0"
+
+[variables]
+token = { required = true }
+api_uri = { default = "http://localhost:3001" }
+
+[[trigger.http]]
+route = "/..."
+component = "python"
+
+[component.python]
+source = "app.wasm"
+allowed_outbound_hosts = ["{{ api_uri }}"]
+[component.python.variables]
+token = "{{ token }}"
+api_uri = "{{ api_uri }}"
+version = "v1"
+[component.python.build]
+command = "componentize-py -w spin-http componentize app -o app.wasm"
+watch = ["*.py", "requirements.txt"]

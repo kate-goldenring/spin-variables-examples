@@ -1,0 +1,27 @@
+spin_manifest_version = 2
+
+[application]
+name = "rust"
+version = "0.1.0"
+authors = ["Kate Goldenring <kate.goldenring@fermyon.com>"]
+description = "API "
+
+[variables]
+token = { required = true }
+api_uri = { default = "http://localhost:3001" }
+
+[[trigger.http]]
+route = "/..."
+component = "rust"
+
+[component.rust]
+source = "target/wasm32-wasi/release/rust.wasm"
+allowed_outbound_hosts = ["{{ api_uri }}"]
+
+[component.rust.variables]
+token = "{{ token }}"
+api_uri = "{{ api_uri }}"
+version = "v1"
+[component.rust.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]

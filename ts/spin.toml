@@ -1,0 +1,28 @@
+spin_manifest_version = 2
+
+[application]
+authors = ["Kate Goldenring <kate.goldenring@fermyon.com>"]
+description = "ts"
+name = "ts"
+version = "0.1.0"
+
+[variables]
+token = { required = true }
+api_uri = { default = "http://localhost:3001" }
+
+[[trigger.http]]
+route = "/..."
+component = "ts"
+
+[component.ts]
+source = "target/ts.wasm"
+exclude_files = ["**/node_modules"]
+allowed_outbound_hosts = ["{{ api_uri }}"]
+[component.ts.variables]
+token = "{{ token }}"
+api_uri = "{{ api_uri }}"
+version = "v1"
+
+[component.ts.build]
+command = "npm run build"
+watch = ["src/**/*.ts", "package.json"]
